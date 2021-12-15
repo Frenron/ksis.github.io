@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../../../main.style.css">
+    <link rel="stylesheet" href="lw-styles/question.css">
+    <link rel="stylesheet" href="../code-template.css">
+    <link rel="icon" type="image/x-icon" href="../icons/globo.png">
+    <link rel="stylesheet" href="../../../../Modules/highlight/styles/stackoverflow-light.css">
+    <script src="../../../../Modules/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <title>Лабораторная работа 2</title>
+</head>
+
+<body>
+
+    <div class="toTop">
+        <a href="#top" class="anchor" title="Наверх"></a>
+    </div>
+
+    <button class="open-menu" onclick="openMenu()"></button>
+    
+    <header id="top">
+        <div class="practice">
+            <a  target="blank" ></a>
+        </div>
+
+        <div class="home">
+            <a href="../../../main.page.html" title="Home"></a>
+        </div>
+    </header>
+
+    <div class="head">
+        <div class="content">
+            <span class="page-title">
+                Лабораторная работа 2
+            </span>
+            <div class="description">
+                Статическая адресация
+            </div>
+        </div>
+    </div>
+    <main>
+
+        <div class="main-content">
+    
+            <span class="title">Цель работы</span>
+            <div class="introduction">
+                Изучение методов организации одноранговой сети на базе операционных систем Windows.
+            </div>
+    
+            <span class="title">Краткие теоретические сведения</span>
+            <div class="questions">
+                <div>
+                    <div class="question">
+    
+                        <span>Организация одноранговой сети</span>
+                        <div class="question-describe">
+                            Каждый компьютер в сетях TCP/IP имеет адреса трех уровней:
+                            физический (MAC-адрес), сетевой (IP-адрес) и символьный (DNSимя). <br><br>
+                            Ключевую роль в организации любой компьютерной сети играет
+                            сетевой адрес (IP-адрес), который представляет собой 32-разрядное
+                            двоичное число, разделенное на группы по 8 бит, называемые октетами. Например, 00010001 11101111 00101111 01011110. <br><br>
+                            Обычно IP-адреса записываются в виде четырех десятичных октетов и разделяются точками. Таким образом, приведенный выше IPадрес можно записать в следующей форме: 17.239.47.94. <br><br>
+                            Следует заметить, что максимальное значение октета равно
+                            111111112 (двоичная система счисления), что соответствует в десятичной системе 25510. Поэтому IP-адреса, в которых хотя бы один октет превышает это число, являются недействительными. <br>Пример: <br> <br>
+                            172.16.123.1 – действительный адрес, а 172.16.123.256 – несуществующий адрес, поскольку 256 выходит за пределы допустимого диапазона: от 0 до 255. <br><br>
+                            IP-адрес состоит из двух логических частей – номера подсети (ID
+                            подсети) и номера узла (ID хоста) в этой подсети. При передаче пакета
+                            из одной подсети в другую используется ID подсети. Когда пакет попал в подсеть назначения, ID хоста указывает на конкретный узел в
+                            рамках этой подсети. <br><br>
+
+                            Чтобы записать ID подсети, в поле номера узла в IP-адресе ставят
+                            нули. Чтобы записать ID хоста, в поле номера подсети ставят нули.
+                            Например, если в IP-адресе 172.16.123.1 первые два байта отводятся
+                            под номер подсети, остальные два байта – под номер узла, то номера
+                            записываются следующим образом: <br> <br> ID подсети 172.16.0.0; <br>ID хоста
+                            0.0.123.1. <br><br>
+                            По числу разрядов, отводимых для представления номера узла
+                            (или номера подсети), можно определить общее количество узлов
+                            (или подсетей) по простому правилу: если число разрядов для представления номера узла равно N, то общее количество узлов равно 2^N – 2. Два узла вычитаются вследствие того, что адреса со всеми разрядами, равными нулям или единицам, являются особыми и используются в специальных целях. <br><br>
+                            Например, если под номер узла в некоторой подсети отводится
+                            два байта (16 бит), то общее количество узлов в такой подсети равно
+                            2^16 – 2 = 65534 узла. <br><br>
+
+                            Общее правило: <br> под ID подсети отводятся первые несколько бит
+                            IP-адреса, оставшиеся биты обозначают ID хоста. <br><br>
+                            Служба распределения номеров IANA (Internet Assigned Numbers
+                            Authority) зарезервировала для частных (локальных) сетей три блока
+                            адресов: <br><br>
+                            10.0.0.0 – 10.255.255.255 (префикс 10/8); <br>
+                            172.16.0.0 – 172.31.255.255 (префикс 172.16/12); <br>
+                            192.168.0.0 – 192.168.255.255 (префикс 192.168/16). <br><br>
+                            Будем называть первый блок 24-битовым, второй – 20-битовым, а
+                            третий – 16-битовым. Отметим, что первый блок представляет собой
+                            не что иное, как одну сеть класса А, второй блок – 16 последовательных сетей класса В, а третий блок – 256 последовательных сетей класса С. <br><br>
+                            Любая организация может использовать IP-адреса из этих блоков
+                            без согласования с IANA или Internet-регистраторами. В результате
+                            эти адреса используются во множестве организаций. Таким образом,
+                            уникальность адресов сохраняется только в масштабе одной или нескольких организаций, согласованно использующих общий блок адресов. В такой сети каждая рабочая станция может обмениваться информацией с любой другой рабочей станцией частной сети. <br><br>
+                            Если организации требуются уникальные адреса для связи с
+                            внешними сетями, такие адреса следует получать обычным путем через регистраторов Internet. Такие адреса никогда не будут входить ни
+                            в один из указанных выше блоков частных адресов. <br><br>
+
+
+
+
+                           
+                        </div>
+    
+                    </div>
+    
+    
+                </div>
+                
+    
+                <div>
+                    <span class="title">Содержание работы</span>
+                    <div class="question">
+    
+                        <span>Задание</span>
+                        <div class="question-describe">
+                            Организация одноранговой сети со статической адресацией между двумя хостами с разделением ресурсов между пользователями. Лабораторная работа может выполняться в парах (на каждой
+                            стороне студент настраивает один хост и связь организуется через реальную компьютерную сеть), либо индивидуально (на одном компьютере настраиваются два хоста с организацией между ними виртуальной сети). В качестве хостов должны выступать виртуальные операционные системы типа Windows (XP, Vista, Seven и т. д.) со статически заданными сетевыми адресами согласно варианту (таблица). Адрес основного компьютера выбрать самостоятельно из диапазона
+                            172.16.193.233/20 – 172.16.193.250/20. <br><br>
+                            <table border=".5" align="center">
+                                <caption><strong>Варианты заданий для лабораторной работы № 2–3</strong></caption> 
+                                <tbody><tr>
+                                 <th> Вариант</th>
+                                 <th> Имя хоста </th>
+                                 <th> IP-адрес хоста</th>
+                                 <th> Пользователи</th>
+                                </tr>
+
+                                <tr>
+                                    <td>1</td>
+                                    <td>Host1_1<br>Host1_2</td>
+                                    <td>172.16.193.201<br>172.16.193.202</td>
+                                    <td>User1<br>User2</td>
+                                </tr>
+                                
+                                <tr>
+                                    <td>2</td>
+                                    <td>Host2_1<br>Host2_2</td>
+                                    <td>172.16.193.203<br>172.16.193.204</td>
+                                    <td>User1<br>User2</td>
+                                </tr>
+
+                                <tr>
+                                    <td>3</td>
+                                    <td>Host3_1<br>Host3_2</td>
+                                    <td>172.16.193.205<br>172.16.193.206</td>
+                                    <td>User1<br>User2</td>
+                                </tr>
+
+                                <tr>
+                                    <td>4</td>
+                                    <td>Host4_1<br>Host4_2</td>
+                                    <td>172.16.193.207<br>172.16.193.208</td>
+                                    <td>User1<br>User2</td>
+                                </tr>
+
+                                <tr>
+                                    <td>5</td>
+                                    <td>Host5_1<br>Host5_2</td>
+                                    <td>172.16.193.209<br>172.16.193.210</td>
+                                    <td>User1<br>User2</td>
+                                </tr>
+
+                                <tr>
+                                    <td>6</td>
+                                    <td>Host6_1<br>Host6_2</td>
+                                    <td>172.16.193.211<br>172.16.193.212</td>
+                                    <td>User1<br>User2</td>
+                                </tr>
+
+                                <tr>
+                                    <td>7</td>
+                                    <td>Host7_1<br>Host7_2</td>
+                                    <td>172.16.193.213<br>172.16.193.214</td>
+                                    <td>User1<br>User2</td>
+                                </tr>
+
+                                <tr>
+                                    <td>8</td>
+                                    <td>Host8_1<br>Host8_2</td>
+                                    <td>172.16.193.215<br>172.16.193.216</td>
+                                    <td>User1<br>User2</td>
+                                </tr>
+
+                                <tr>
+                                    <td>9</td>
+                                    <td>Host9_1<br>Host9_2</td>
+                                    <td>172.16.193.217<br>172.16.193.218</td>
+                                    <td>User1<br>User2</td>
+                                </tr>
+
+                                <tr>
+                                    <td>10</td>
+                                    <td>Host10_1<br>Host10_2</td>
+                                    <td>172.16.193.219<br>172.16.193.220</td>
+                                    <td>User1<br>User2</td>
+                                </tr>
+
+                                <tr>
+                                    <td>11</td>
+                                    <td>Host11_1<br>Host11_2</td>
+                                    <td>172.16.193.221<br>172.16.193.222</td>
+                                    <td>User1<br>User2</td>
+                                </tr>
+
+                                <tr>
+                                    <td>12</td>
+                                    <td>Host12_1<br>Host12_2</td>
+                                    <td>172.16.193.223<br>172.16.193.224</td>
+                                    <td>User1<br>User2</td>
+                                </tr>
+
+                                <tr>
+                                    <td>13</td>
+                                    <td>Host13_1<br>Host13_2</td>
+                                    <td>172.16.193.225<br>172.16.193.226</td>
+                                    <td>User1<br>User2</td>
+                                </tr>
+
+                                <tr>
+                                    <td>14</td>
+                                    <td>Host14_1<br>Host14_2</td>
+                                    <td>172.16.193.227<br>172.16.193.228</td>
+                                    <td>User1<br>User2</td>
+                                </tr>
+
+                                <tr>
+                                    <td>15</td>
+                                    <td>Host15_1<br>Host15_2</td>
+                                    <td>172.16.193.229<br>172.16.193.230</td>
+                                    <td>User1<br>User2</td>
+                                </tr>
+                               
+                               </tbody></table>
+    
+                        </div>
+    
+                    </div>
+    
+                    <div class="question">
+    
+                        <span>Методические указания</span>
+                        <div class="question-describe">
+                            Для каждого пользователя (в соответствии с таблицей) на хосте
+                            создаются две папки: одна − для «полного доступа», а вторая – с правами «только чтение». При этом папки, предназначенные для одного
+                            пользователя, не должны быть доступны другим пользователям.
+                         
+    
+    
+                        </div>
+    
+                    </div>
+    
+                    <div class="solution">
+                        <span class="title" style="margin-bottom: 0;">Решение</span>
+    
+                        <div class="code-temp" style="margin-bottom: 0;">
+                            <span class="code-lang">Видео</span>
+    
+                            
+                <video src="video/lab2/2.mp4" width="100%"  controls align="center"></video> 
+    
+                            
+            
+                        </div>
+    
+                        <input type="button">
+                    </div>
+    
+                </div>
+
+
+                <div>
+                    
+                <span class="title">Проверь себя</span>
+                <div class="question">
+    
+                    <span>Контрольные вопросы</span>
+                    <div class="question-describe">
+                        1. <br><br>
+                        2. <br><br>
+                        3. <br><br>
+                        4. <br><br>
+                        5. <br><br>
+                        6. <br><br>
+                        7. <br><br>
+                        8. <br><br>
+                        9. <br><br>
+                        10. <br><br>
+                    </div>
+    
+                </div>
+    
+    
+            </div>
+            </div>
+            
+    
+            <div class="goto-page">
+                <div class="previous">
+                    <a href="first-lw.html" class="previous-img" title="К предыдущей лабораторной">
+                        <img src="../icons/left-arrow.svg">
+                    </a>
+                    <span  class="previous-lw">
+                        Предыдущая работа
+                    </span>
+                </div>
+                <div class="next">
+                    <span class="next-lw">
+                        Следующая работа
+                    </span>
+                    <a href="third-lw.html" class="next-img" title="К следующей лабораторной">
+                        <img src="../icons/right-arrow.svg">
+                    </a>
+                </div>
+            </div>
+    
+            
+    
+        </div>
+    
+        <nav>
+            <button class="close-menu" onclick="closeMenu()"></button>
+            <div class="container">
+                <div class="menu">    
+    
+                    <div class="item watch">
+                        <a class="sub-title" title="Перейти к разделу">Компьютерные сети</a>
+                        <div class="sub-menu">
+    
+                            <div class="item-wrap">
+                                <a href="first-lw.html" class="sub-item">
+                                    Лабораторная работа 1
+                                </a>
+                            </div>
+    
+                            <div class="item-wrap">
+                                <a href="second-lw.html" class="sub-item">
+                                    Лабораторная работа 2
+                                </a>
+                            </div>
+    
+                            <div class="item-wrap">
+                                <a href="third-lw.html" class="sub-item">
+                                    Лабораторная работа 3
+                                </a>
+                            </div>
+    
+                            <div class="item-wrap">
+                                <a href="fourth-lw.html" class="sub-item">
+                                    Лабораторная работа 4
+                                </a>
+                            </div>
+    
+                            <div class="item-wrap">
+                                <a href="fifth-lw.html" class="sub-item">
+                                    Лабораторная работа 5
+                                </a>
+                            </div>
+    
+                            <div class="item-wrap">
+                                <a href="sixth-lw.html" class="sub-item">
+                                    Лабораторная работа 6
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </main>
+    
+
+    <footer>
+        <div class="info">
+
+            <div class="contact-us">
+
+                <span class="article-title">
+                    Contact us
+                </span>
+
+                <div class="article-content">
+                    <div class="telephone">
+                        <span class="contact-icon"></span>
+                        <span>
+                            +375 (**) **-**-**
+                        </span>
+                    </div>
+                    <div class="mail">
+                        <span class="contact-icon"></span>
+                        <span>
+                            info@mail.ru
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="links">
+                <span class="article-title">
+                    Links
+                </span>
+
+                <div class="article-content">
+
+                   <div class="icons-resource">
+                        Icons made by 
+                        <a href="https://www.flaticon.com/" title="Flaticon" target="blank"> 
+                            www.flaticon.com
+                        </a>
+                   </div>
+
+                   <div class="icons-resource">
+                        Used library
+                        <a href="https://highlightjs.org/" title="Highlight.js" target="blank"> 
+                            www.highlightjs.org
+                        </a>
+                   </div>
+
+                   <div class="university">
+                        <a href="http://www.belstu.by/"
+                        title="Перейти на сайт БГТУ" target="blank">
+                            BSTU
+                        </a>
+                   </div>
+                    
+                </div>
+            </div>
+
+            <div class="about">
+                <span class="article-title">
+                    About
+                </span>
+
+                <div class="article-content">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sit laboriosam assumenda sequi vero nulla saepe dolorem harum, quae atque aut quod exercitationem quibusdam eligendi similique animi culpa repellendus quis unde minus! Eveniet, unde facere aut ab ullam quis beatae non eligendi ut odio. Recusandae odio rem in, iure voluptatibus doloremque!
+                </div>
+            </div>
+
+        </div>
+
+        <div class="rights">
+            Copyright &#169; 2021, created by
+            <a href="https://www.instagram.com/frenron/" class="vk-link" target="blank">
+                Frenron 
+            </a>
+        </div>
+    </footer>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+    <script src="lw-scripts/second-lw.js"></script>
+    <script src="../../../main.script.js"></script>
+
+</body>
+</html>
